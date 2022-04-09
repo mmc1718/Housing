@@ -47,23 +47,17 @@ class HostingBase:
         self._base = base
         self._hosts = Database(base,_HOST_TABLE)
         self._refugees = Database(base,_REFUGEE_TABLE)
-
-    def getDefaultHost(self):
-        return {    
+        self._defHostEntry = {    
                 "Name":     "John Doe",
                 "City":     "Hintertupfingen",
                 "NGuests":  1,
                 "Date":     dateutils.date(1999, 1, 1),
                 "Email":    "john@doe.de",
                 "Phone":    "01234567890"}
-    def getDefaultRefugee(self):
-        return {    
+        self._defRefugeeEntry = {    
                 "Name":     "John Doe",
                 "City":     "Hintertupfingen",
                 "NGuests":  1,
                 "Date":     dateutils.date(1999, 1, 1),
                 "Email":    "john@doe.de",
-                "Phone":    "01234567890"}
-        
-        
-
+                "Phone":    "01234567890"}   

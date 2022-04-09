@@ -17,8 +17,7 @@ def initBase():
 if __name__ == "__main__":
     base = initBase()
     hostingBase = utils.DummyScript.HostingBase(base)
-    h= hostingBase.getHostByID('H-000001')
-
+    
     
     
     
