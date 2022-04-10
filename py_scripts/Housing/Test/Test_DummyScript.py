@@ -50,7 +50,7 @@ if __name__ == "__main__":
     print(refugees.getAllRows())
     print ("\n")
     print("All Rows of View: \n")
-    print(refugees.getAllRowsOfView("Simple View"))
+    print(refugees.getAllRowsOfView((ViewDef.SIMPLEMATCHING))
     print("\n")
     genId = "R-000002"
     rowId = refugees.getRowIdOfGenId(genId)
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     print("Get Gen Id by Row Id " + rowId +": " + genId)
     refugees.updateTimeStamp("Date",rowId)
     print("Diff after update is " + genId + " is: " + str(refugees.getTimeDiff("Date", rowId)))
-    rows_data = (refugees.getAllRowsOfView("Simple View"))
+    rows_data = (refugees.getAllRowsOfView((ViewDef.SIMPLEMATCHING))
     refugees.batchUpdate(rows_data)
     print("All Rows after Batch Update: \n")
     print(refugees.getAllRows()) 
