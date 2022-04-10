@@ -7,6 +7,7 @@ from seatable_api import Base, context
 import utils.DummyScript as ds
 from utils.DummyScript import HostDatabase as Hosts
 from utils.DummyScript import RefugeeDatabase as Refugees
+from utils.DummyScript import TableDef, ViewDef
 
 def initBase():
     server_url = context.server_url or 'https://cloud.seatable.io'
@@ -28,7 +29,7 @@ if __name__ == "__main__":
     print(hosts.getAllRows())
     print ("\n")
     print("All Rows of View: \n")
-    print(hosts.getAllRowsOfView("Simple View"))
+    print(hosts.getAllRowsOfView(ViewDef.SIMPLEMATCHING))
     print("\n")
     genId = "H-000001"
     rowId = hosts.getRowIdOfGenId(genId)
