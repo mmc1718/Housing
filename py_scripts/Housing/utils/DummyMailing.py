@@ -2,14 +2,14 @@
 from pickle import NONE
 from seatable_api import Base, context
 from seatable_api.date_utils import dateutils
-import requests
+
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
-from email.header import Header
-from urllib import parse
+from seatable_api.constants import UPDATE_DTABLE
+import json
+
 
 class TableDef:
     HOST = "Hosts"
@@ -162,138 +162,144 @@ class HostingBase:
 server_url = context.server_url or 'https://cloud.seatable.io'
 api_token = context.api_token or 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkdGFibGVfdXVpZCI6IjljNDNhNTU4LWIzNmEtNGMyMy1iM2Y0LTQ0MThmMDRkY2QwZSIsImFwcF9uYW1lIjoiNzdXcC5weSIsImV4cCI6MTY0OTcxNjQ1NH0.sfBvizi8j6UotTFXZ0FRW2zd0ClVyJfGr93YX8B8oRc'
 base = Base(api_token, server_url)
-base.auth()
+base.auth(with_socket_io=True)
 
 # Get Instances of all required tables
 hosts = HostDatabase(base)   
-refugees = RefugeeDatabase(base)    
 
-   
-# set the parameters required for smtplib
-# the sender and recipient below are for mail transmission.
-
-smtpserver = 'smtp.????????.com'
-username = 'Die Mailaddresse'
-password = 'Das Passwort!'
-sender = 'Die Mailaddress'
-
-
-# the recipient is multiple recipients
-# you can specify an email address
-receiver_rows = hosts.getRowByGenId('H-000001')
-
-
-# if you want to use the inbox in the table, for example
-# there is a table named Contacts, the table has a column named Email, which stores the email addresses
-
-#receiver_rows = [{hosts.getRowByGenId('H-000001')},{hosts.getRowByGenId('H-000004)}]
-for row in receiver_rows:
-    receiver = ['Your Debug MailAdresse']
-    #receiver = row['Email'] # Use this for database
+def getHMTLWithRowData(row):  
     html = """<html>
-        <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <style>
-                body {
-                    background-color: #FFFFFF;
-                }
-                h3 {
-                    font-family: Arial, sans-serif;
-                    color: #ac0606;
-                    text-align: Left;
-                }
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {
+                        background-color: #FFFFFF;
+                    }
+                    h3 {
+                        font-family: Arial, sans-serif;
+                        color: #ac0606;
+                        text-align: Left;
+                    }
 
-                h5 {
-                    font-family: Arial, sans-serif;
-                    color: #ac0606;
-                    text-align: Left;
+                    h5 {
+                        font-family: Arial, sans-serif;
+                        color: #ac0606;
+                        text-align: Left;
+                    }
+                    p {
+                        font-family: Arial, sans-serif;
+                        font-size: 14px;
+                        text-align: default;
+                        color: #333333;
+                    }
+                    table {
+                    border:1px solid #ffffff;
+                    border-collapse:collapse;
+                    padding:5px;
                 }
-                p {
+                table td {
                     font-family: Arial, sans-serif;
                     font-size: 14px;
-                    text-align: default;
+                    border:1px solid #ffffff;
+                    text-align:left;
+                    padding:5px;
+                    background: #FFFFFFF;
                     color: #333333;
                 }
-                table {
-                border:1px solid #ffffff;
-                border-collapse:collapse;
-                padding:5px;
-            }
-            table td {
-                font-family: Arial, sans-serif;
-                font-size: 14px;
-                border:1px solid #ffffff;
-                text-align:left;
-                padding:5px;
-                background: #FFFFFFF;
-                color: #333333;
-            }
-            </style>
-        </head>
-        <body>
+                </style>
+            </head>
+            <body>
+                
+                <img src=https://image.jimcdn.com/app/cms/image/transf/dimension=191x10000:format=png/path/s59dccae3060b5b75/image/i6e9239b04936e077/version/1500409958/image.png" alt="image" style="width:80px;height:80px;">
+                <h3>Vielen Dank für Ihre Unterstützung!</h3>
+                <p>Wir werden sie kontaktieren sobald wir eine Anfrage haben, die auf ihr Profil passt.</p>
+                <p>Bitte haben sie etwas Geduld, da es durchaus ein paar Tage dauern kann bis ein passender Match zustande kommt. Im folgenden listen wir ihre Daten noch einmal auf.</p>
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Ihre ID</td>
+                            <td>""" + row['ID'] + """</td>
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td>"""+ row['Name'] +"""</td>
+                        </tr>
+                        <tr>
+                            <td>Adresse</td>
+                            <td>"""+ row['Adresse'] +"""</td>
+                        </tr>
+                        <tr>
+                            <td>Telefonnummer</td>
+                            <td>"""+str(row['Telefon'])+"""</td>
+                        </tr>
+                        <tr>
+                            <td>Date</td>
+                            <td>"""+row['Date'] + """</td>
+                        </tr>
+                        <tr>
+                            <td>Max. Anzahl der Gäste</td>
+                            <td>"""+ str(row['Max. Number Guests']) + """</td>
+                        </tr>
+                        <tr>
+                            <td>Unterkunft</td>
+                            <td> """+ row['Accomodation Type']+"""</td>
+                        </tr>
+                    </tbody>
+                </table>
+            <p>Falls sie Fragen haben, ihre Daten ändern wollen oder löschen wollen, schreiben sie bitte an wohnraum@moabit-hilft.de oder rufen sie die Hotline +49 01234567789 an.</p>
+            <h5>Ihr Team von der Wohnraum Vermittlung Moabit!</h5> 
+            <h5>Impressum</h5>
+            <p><b>Moabit hilft e.V.</b><br />Turmstr.21<br />Haus R<br />10559 Berlin<br /><br />Fon +49 30 35057538<br />info@moabit-hilft.com<br />https://www.moabit-hilft.com</p> 
+            </body>
+        </html>"""
+
+def  sendMail(receiver_rows): 
+    # set the parameters required for smtplib
+    # the sender and recipient below are for mail transmission.
+
+    username = 'Die Mailaddresse'
+    password = 'Das Passwort!'
+
+    # if you want to use the inbox in the table, for example
+    # there is a table named Contacts, the table has a column named Email, which stores the email addresses
+
+    #receiver_rows = [{hosts.getRowByGenId('H-000001')},{hosts.getRowByGenId('H-000004)}]
+    for row in receiver_rows:
+        receiver = ['Your Debug MailAdresse']
+        #receiver = row['Email'] # Use this for database
+       
+        text_html = MIMEText(getHMTLWithRowData(row),'html', 'utf-8')
+        msg = MIMEMultipart('mixed')
+        msg['From'] = f'"Moabit Hilft" <{username}>'
+        msg['To'] = receiver
+
+        msg['Subject'] = "Registrierungsbestätigung"
+        msg.attach(text_html)
+
+        try:
+            mailServer = smtplib.SMTP('smtp.gmail.com', 587)
+            mailServer.ehlo()
+            mailServer.starttls()
+            mailServer.ehlo()
+            mailServer.login(username, password)
+            mailServer.sendmail(username, receiver , msg.as_string())
+            mailServer.close()
+            print ('Email sent to ' + receiver)
+        except:
+            print ('Something went wrong...')
             
-            <img src=https://image.jimcdn.com/app/cms/image/transf/dimension=191x10000:format=png/path/s59dccae3060b5b75/image/i6e9239b04936e077/version/1500409958/image.png" alt="image" style="width:80px;height:80px;">
-            <h3>Vielen Dank für Ihre Unterstützung!</h3>
-            <p>Wir werden sie kontaktieren sobald wir eine Anfrage haben, die auf ihr Profil passt.</p>
-            <p>Bitte haben sie etwas Geduld, da es durchaus ein paar Tage dauern kann bis ein passender Match zustande kommt. Im folgenden listen wir ihre Daten noch einmal auf.</p>
-
-            <table>
-                <tbody>
-                    <tr>
-                        <td>Ihre ID</td>
-                        <td>""" + row['ID'] + """</td>
-                    </tr>
-                    <tr>
-                        <td>Name</td>
-                        <td>"""+ row['Name'] +"""</td>
-                    </tr>
-                    <tr>
-                        <td>Adresse</td>
-                        <td>"""+ row['Adresse'] +"""</td>
-                    </tr>
-                    <tr>
-                        <td>Telefonnummer</td>
-                        <td>"""+str(row['Telefon'])+"""</td>
-                    </tr>
-                    <tr>
-                        <td>Date</td>
-                        <td>"""+row['Date'] + """</td>
-                    </tr>
-                    <tr>
-                        <td>Max. Anzahl der Gäste</td>
-                        <td>"""+ str(row['Max. Number Guests']) + """</td>
-                    </tr>
-                    <tr>
-                        <td>Unterkunft</td>
-                        <td> """+ row['Accomodation Type']+"""</td>
-                    </tr>
-                </tbody>
-            </table>
-        <p>Falls sie Fragen haben, ihre Daten ändern wollen oder löschen wollen, schreiben sie bitte an wohnraum@moabit-hilft.de oder rufen sie die Hotline +49 01234567789 an.</p>
-        <h5>Ihr Team von der Wohnraum Vermittlung Moabit!</h5> 
-        <h5>Impressum</h5>
-        <p><b>Moabit hilft e.V.</b><br />Turmstr.21<br />Haus R<br />10559 Berlin<br /><br />Fon +49 30 35057538<br />info@moabit-hilft.com<br />https://www.moabit-hilft.com</p> 
-        </body>
-    </html>"""
-
-
-
-    text_html = MIMEText(html,'html', 'utf-8')
-    msg = MIMEMultipart('mixed')
-    msg['From'] = f'"Moabit Hilft" <{username}>'
-    msg['To'] = receiver
-
-    msg['Subject'] = "Registrierungsbestätigung"
-    msg.attach(text_html)
-
+            
+def on_update_seatable(data, index, *args):
     try:
-        mailServer = smtplib.SMTP('smtp.gmail.com', 587)
-        mailServer.ehlo()
-        mailServer.starttls()
-        mailServer.ehlo()
-        mailServer.login(username, password)
-        mailServer.sendmail(username, receiver , msg.as_string())
-        mailServer.close()
-        print ('Email sent to ' + receiver)
+        data = json.loads(data)
     except:
-        print ('Something went wrong...')
+        print("Something went wrong with data decode.")
+        return
+    
+    if (data['op_type'] == 'insert_row'):
+        receiver_rows  = hosts.getRowByRowId(data['row_id'])
+        sendMail(receiver_rows)
+
+base.socketIO.on(UPDATE_DTABLE, on_update_seatable)
+base.socketIO.wait()  # forever        
