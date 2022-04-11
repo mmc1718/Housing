@@ -1,6 +1,5 @@
     
 from pickle import NONE
-from xmlrpc.client import MAXINT
 from seatable_api import Base, context
 from seatable_api.date_utils import dateutils
 
