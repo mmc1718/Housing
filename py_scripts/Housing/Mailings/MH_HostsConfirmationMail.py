@@ -19,6 +19,7 @@ class TableDef:
 class ViewDef:
     DEFAULT = "Default View"
     SIMPLEMATCHING = "Simple Matching"
+    SCRIPT_VIEW = "Script_View_DO_NOT_TOUCH"
 
 class Database:
     def __init__(self, base=Base, tableName=str):
@@ -153,13 +154,13 @@ class HostingBase:
     def __init__(self, base=Base):
         self._base = base
         self._hosts = HostDatabase(base,TableDef.HOST)
-        self._refugees = RefugeeDatabase(base,TableDef.HOST)
+        self._refugees = RefugeeDatabase(base,TableDef.REFUGEES)
 
 def initBase():
     server_url = context.server_url or 'https://cloud.seatable.io'
-    api_token = context.api_token or 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkdGFibGVfdXVpZCI6IjljNDNhNTU4LWIzNmEtNGMyMy1iM2Y0LTQ0MThmMDRkY2QwZSIsImFwcF9uYW1lIjoiNzdXcC5weSIsImV4cCI6MTY0OTc5MzIxNX0.lnwvxSwfZ4YuECCaR2VOh6W4fbckfZ6qeO5tNIpm-3w'
+    api_token = context.api_token or 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkdGFibGVfdXVpZCI6IjljNDNhNTU4LWIzNmEtNGMyMy1iM2Y0LTQ0MThmMDRkY2QwZSIsImFwcF9uYW1lIjoiNzdXcC5weSIsImV4cCI6MTY0OTc5NzU1N30.z35xkQL-dTFUZ1WJJxALVuqJxNOPr5y0YQzMQUyXo7w'
     base = Base(api_token, server_url)
-    base.auth(with_socket_io=True)
+    base.auth(with_socket_io=False)
     return base        
         
 base = initBase()
@@ -257,7 +258,7 @@ def getHMTLWithRowData(row):
         </html>"""
     return html
 
-def  sendMail(receiver_rows): 
+def  sendMail(row): 
     # set the parameters required for smtplib
     # the sender and recipient below are for mail transmission.
 
@@ -266,45 +267,33 @@ def  sendMail(receiver_rows):
 
     # if you want to use the inbox in the table, for example
     # there is a table named Contacts, the table has a column named Email, which stores the email addresses
+    receiver = row['Email'] # Use this for database
+    mail = getHMTLWithRowData(row)
+    text_html = MIMEText(mail,'html', 'utf-8')
+    msg = MIMEMultipart('mixed')
+    msg['From'] = f'"Moabit Hilft" <{username}>'
+    msg['To'] = receiver
 
-    #receiver_rows = [{hosts.getRowByGenId('H-000001')},{hosts.getRowByGenId('H-000004)}]
-    for row in receiver_rows:
-        receiver = row['Email'] # Use this for database
-        mail = getHMTLWithRowData(row)
-        text_html = MIMEText(mail,'html', 'utf-8')
-        msg = MIMEMultipart('mixed')
-        msg['From'] = f'"Moabit Hilft" <{username}>'
-        msg['To'] = receiver
+    msg['Subject'] = "Moabit Hilft e.V - Wohnraumvermittlung - Ihre Registrierungsbestätigung"
+    msg.attach(text_html)
 
-        msg['Subject'] = "Registrierungsbestätigung"
-        msg.attach(text_html)
-
-        try:
-            mailServer = smtplib.SMTP('smtp.gmail.com', 587)
-            mailServer.ehlo()
-            mailServer.starttls()
-            mailServer.ehlo()
-            mailServer.login(username, password)
-            mailServer.sendmail(username, receiver , msg.as_string())
-            mailServer.close()
-            print ('Email sent to ' + receiver)
-        except:
-            print ('Something went wrong...')
-            
-            
-def on_update_seatable(data, index, *args):
     try:
-        data = json.loads(data)
+        mailServer = smtplib.SMTP('smtp.gmail.com', 587)
+        mailServer.ehlo()
+        mailServer.starttls()
+        mailServer.ehlo()
+        mailServer.login(username, password)
+        mailServer.sendmail(username, receiver , msg.as_string())
+        mailServer.close()
+        print ('Email sent to ' + receiver)
     except:
-        print("Something went wrong with data decode.")
-        return
-    
-    if (data['op_type'] == 'insert_row'):
-        receiver_rows  = [hosts.getRowByRowId(data['row_id'])]
-        sendMail(receiver_rows)
-        receiver_rows.clear()
-        data=[]
-
-base.socketIO.on(UPDATE_DTABLE, on_update_seatable)
-base.socketIO.wait()  # forever 
+        print ('Something went wrong...')
+            
+q = 'SELECT * FROM ' + hosts._tableName + ' ORDER BY _ctime DESC'           
+rows = base.query(q)
+for row in rows:
+    if row['__RegisterConfirmationSend'] != True:
+        sendMail(row)
+        hosts.updateRowCell(row['_id'],'__RegisterConfirmationSend',True)
+        break 
 
