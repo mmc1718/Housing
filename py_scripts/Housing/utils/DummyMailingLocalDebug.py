@@ -155,18 +155,20 @@ class HostingBase:
         self._hosts = HostDatabase(base,TableDef.HOST)
         self._refugees = RefugeeDatabase(base,TableDef.HOST)
 
-
-############### Add intended Script below - Above is just the library ##################################
+def initBase():
+    server_url = context.server_url or 'https://cloud.seatable.io'
+    api_token = context.api_token or 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkdGFibGVfdXVpZCI6IjljNDNhNTU4LWIzNmEtNGMyMy1iM2Y0LTQ0MThmMDRkY2QwZSIsImFwcF9uYW1lIjoiNzdXcC5weSIsImV4cCI6MTY0OTc5MzIxNX0.lnwvxSwfZ4YuECCaR2VOh6W4fbckfZ6qeO5tNIpm-3w'
+    base = Base(api_token, server_url)
+    base.auth(with_socket_io=True)
+    return base        
         
-# Connect to Seatable Cloude
-server_url = context.server_url or 'https://cloud.seatable.io'
-api_token = context.api_token or 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkdGFibGVfdXVpZCI6IjljNDNhNTU4LWIzNmEtNGMyMy1iM2Y0LTQ0MThmMDRkY2QwZSIsImFwcF9uYW1lIjoiNzdXcC5weSIsImV4cCI6MTY0OTcxNjQ1NH0.sfBvizi8j6UotTFXZ0FRW2zd0ClVyJfGr93YX8B8oRc'
-base = Base(api_token, server_url)
-base.auth(with_socket_io=True)
+base = initBase()
+hosts = HostDatabase(base)
+refugees = RefugeeDatabase(base)
 
-# Get Instances of all required tables
-hosts = HostDatabase(base)   
+ ############### Add your Script below - Above is just the library ##################################
 
+        
 def getHMTLWithRowData(row):  
     html = """<html>
             <head>
@@ -247,12 +249,13 @@ def getHMTLWithRowData(row):
                         </tr>
                     </tbody>
                 </table>
-            <p>Falls sie Fragen haben, ihre Daten ändern wollen oder löschen wollen, schreiben sie bitte an wohnraum@moabit-hilft.de oder rufen sie die Hotline +49 01234567789 an.</p>
+            <p>Falls sie Fragen haben, ihre Daten ändern oder löschen wollen, schreiben sie bitte an wohnraum@moabit-hilft.de oder rufen sie die Hotline +49 01234567789 an.</p>
             <h5>Ihr Team von der Wohnraum Vermittlung Moabit!</h5> 
             <h5>Impressum</h5>
             <p><b>Moabit hilft e.V.</b><br />Turmstr.21<br />Haus R<br />10559 Berlin<br /><br />Fon +49 30 35057538<br />info@moabit-hilft.com<br />https://www.moabit-hilft.com</p> 
             </body>
         </html>"""
+    return html
 
 def  sendMail(receiver_rows): 
     # set the parameters required for smtplib
@@ -266,10 +269,9 @@ def  sendMail(receiver_rows):
 
     #receiver_rows = [{hosts.getRowByGenId('H-000001')},{hosts.getRowByGenId('H-000004)}]
     for row in receiver_rows:
-        receiver = ['Your Debug MailAdresse']
-        #receiver = row['Email'] # Use this for database
-       
-        text_html = MIMEText(getHMTLWithRowData(row),'html', 'utf-8')
+        receiver = row['Email'] # Use this for database
+        mail = getHMTLWithRowData(row)
+        text_html = MIMEText(mail,'html', 'utf-8')
         msg = MIMEMultipart('mixed')
         msg['From'] = f'"Moabit Hilft" <{username}>'
         msg['To'] = receiver
@@ -298,8 +300,9 @@ def on_update_seatable(data, index, *args):
         return
     
     if (data['op_type'] == 'insert_row'):
-        receiver_rows  = hosts.getRowByRowId(data['row_id'])
+        receiver_rows  = [hosts.getRowByRowId(data['row_id'])]
         sendMail(receiver_rows)
 
 base.socketIO.on(UPDATE_DTABLE, on_update_seatable)
-base.socketIO.wait()  # forever        
+base.socketIO.wait()  # forever 
+

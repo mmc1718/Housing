@@ -149,9 +149,9 @@ class HostingBase:
  
 def initBase():
     server_url = context.server_url or 'https://cloud.seatable.io'
-    api_token = context.api_token or 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkdGFibGVfdXVpZCI6IjljNDNhNTU4LWIzNmEtNGMyMy1iM2Y0LTQ0MThmMDRkY2QwZSIsImFwcF9uYW1lIjoiNzdXcC5weSIsImV4cCI6MTY0OTYxODQwNn0.CspygVRHeRt2ivLDpCLRdK4wp4e8WlIc2Q3oxCYptzo'
+    api_token = context.api_token or 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkdGFibGVfdXVpZCI6IjljNDNhNTU4LWIzNmEtNGMyMy1iM2Y0LTQ0MThmMDRkY2QwZSIsImFwcF9uYW1lIjoiNzdXcC5weSIsImV4cCI6MTY0OTc5MzIxNX0.lnwvxSwfZ4YuECCaR2VOh6W4fbckfZ6qeO5tNIpm-3w'
     base = Base(api_token, server_url)
-    base.auth(with_socket_io=False)
+    base.auth(with_socket_io=True)
     return base        
         
 base = initBase()
@@ -159,3 +159,4 @@ hosts = HostDatabase(base)
 refugees = RefugeeDatabase(base)
 
  ############### Add your Script below - Above is just the library ##################################
+hosts.appendRow(hosts.getDefEntry())
