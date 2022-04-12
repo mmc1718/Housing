@@ -145,7 +145,7 @@ class HostingBase:
     def __init__(self, base=Base):
         self._base = base
         self._hosts = HostDatabase(base,TableDef.HOST)
-        self._refugees = RefugeeDatabase(base,TableDef.HOST)
+        self._refugees = RefugeeDatabase(base,TableDef.REFUGEES)
  
 def initBase():
     server_url = context.server_url or 'https://cloud.seatable.io'
