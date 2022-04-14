@@ -1,4 +1,4 @@
-from app_backend import app, qrcode
+from app_backend import app, qrcode_gen
 
 
 def main():
