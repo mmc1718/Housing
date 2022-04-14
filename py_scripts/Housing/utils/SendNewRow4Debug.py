@@ -271,7 +271,7 @@ def run(hosts, refugees, var=None):
     elif MODE is DebugMode.SEATABLECLOUD:
         row = {}
        
-    hosts.appendRow(hosts.getDefEntry()) 
+    hosts.appendRow(hosts.getDummyRow()) 
 
 ###########  Select MODE of your current development ################
 
