@@ -1,4 +1,5 @@
 from io import BytesIO
+import urllib.parse
 import qrcode
 from app_backend import app
 from flask import request, send_file
@@ -23,5 +24,6 @@ def return_qr():
     """return qr code for the url given in the request"""
     request_data = request.get_json()
     url_str = request_data["url"]
+    url_str = urllib.parse.quote(url_str)
     byte_stream = create_qr(url_str)
     return send_file(byte_stream, download_name="qr.png", mimetype="image/png")
