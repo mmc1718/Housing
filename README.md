@@ -38,18 +38,20 @@
     - Run ```git clone https://github.com/misterrioes/KanbanForBerlinHousing.git```
     - Open sourcetree and navigate to your target dir
     - Press Fetch for updates from remote (Online)
-    - Press Pull for updates on your branch from remote
-    - Stage your changed files and then press commit to save your changes locally. recommenden to do this regularly.
+    - Press Pull to get branch updates from remote to your local workspace
+    - Stage your changed files and then press commit to save your changes locally. Recommended to do this regularly.
     - Press push if you want to share your changes with other users
 
 ### Scripting with Seatable API
 #### Getting started with the Script Template
 - Open your IDE
 - Open the directory of your local repo
-- Make a copy of utils/DummyScript.py and move it to a fitting dir in the repo
+- Make a copy of utils/DummyScript.py and move it to a fitting directory in the repo
   - This Dummy Script provides you a working script with a Library/Wrapper. This library makes our scripting easier, less redundant and reduce debugging. 
     It also helps to react easier to changes of table, column and enums definitions. Those have to be hardcoded in every line otherwise. 
     Please, read also the comments of the DebugMode Class to understand the usage. Unfortunately, SeaTable requires different variable declarations and intializations depending, if you are working in the cloud or locally in your IDE. The Workaround is the introduced DebugMode to make it easier for coders that are not so deep in Python
+    -Why are all classes in a super large single file? - The seatable cloud doesn't support the import of other files even when they are all imported. 
+    
 #### Dealing with the API Token
 - Go to the Seatable cloud and log in
 - Navigate to your base
@@ -57,8 +59,9 @@
 - Import utils/getAPIToken.py and utils/sendnewrow4debug.py
 - Run getApiToken() and copy the token to your clipboard
 - Go back to your IDE
-- Copy the token into initStaticBase() and initSocketIOBase(). This has to updated every couple of hours. 
-### Scripting in Templare
+- Copy the token into initStaticBase() and initSocketIOBase(). This has to updated every 2-3 of hours. :(
+- 
+### Scripting in Template
 - Your task logic shall be added to the run() function. Placeholder/Example Code can be removed here :) Please try to only modify code in this section. Extensions of the library are welcome, if they are reused multiple times in other scripts. :)
 - Push your changes to the repo when your script is running without bugs.
 - Go again to </> Button and import your script
