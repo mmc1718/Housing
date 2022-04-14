@@ -1,5 +1,13 @@
 # KanbanForBerlinHousing
 
+## Links
+- https://seatable.github.io/seatable-scripts/python/
+- https://www.w3schools.com/sql/default.asp
+- https://pypi.org/project/seatable-api/
+- https://medium.datadriveninvestor.com/how-to-build-email-marketing-automation-tool-using-seatable-50347b95d344
+- https://github.com/seatable/seatable-scripts/tree/master/examples/python
+
+
 ## Setup of your machine
 - Open your cmd/Eingabeaufforderung
 - Install python (Version >3.5 required)
