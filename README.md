@@ -67,7 +67,7 @@
 > Please try to modify code in this section only. Extensions of the library are welcome, if they are reused multiple times in other scripts.
 - Push your changes to the repo when your script is running without bugs.
 - Go again to ```</>``` Button and import your script
-- Double click on the script and set the correct debug mode depending if your script is triggerd manually (e.g. buttons or similar) or triggered by automatization
+- Double click on the script and set the correct debug mode for manual trigger (e.g. buttons or similar) or automatization scripts
 - Now you can link it to the intended trigger
     - For Automated Scripts, use the 'Automation Rules' in the menu next to the little bell in the upper right corner. Usage is very straightforward.
     - For Manual Trigger, I recommend to add a Button column and link the button the script. Configuration is also straightforward.
