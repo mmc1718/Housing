@@ -49,7 +49,7 @@
 - Make a copy of utils/DummyScript.py and move it to a fitting directory in the repo
   - This Dummy Script provides you a working script with a Library/Wrapper. This library makes our scripting easier, less redundant and reduce debugging. 
     It also helps to react easier to changes of table, column and enums definitions. Those have to be hardcoded in every line otherwise. 
-    Please, read also the comments of the DebugMode Class to understand the usage. Unfortunately, SeaTable requires different variable declarations and intializations depending, if you are working in the cloud or locally in your IDE. The Workaround is the introduced DebugMode to make it easier for coders that are not so deep in Python.
+    Please, read also the comments of the DebugMode Class to understand the usage. Unfortunately, SeaTable requires different variable declarations and intializations, if you are working in the cloud or locally. The Workaround is the introduced DebugMode to make it easier for coders that are not so deep in Python.
   - Why are all classes and functions in a super large single file? 
      > The seatable cloud doesn't support the import of other files even when they are all imported. 
     
