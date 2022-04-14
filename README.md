@@ -62,8 +62,8 @@
 - Go back to your IDE
 - Copy the token into initStaticBase() and initSocketIOBase(). This has to updated every 2-3 of hours. :(
 - 
-### Scripting in Template
-- Your task logic shall be added to the run() function. Placeholder/Example Code can be removed here :) Please try to only modify code in this section. Extensions of the library are welcome, if they are reused multiple times in other scripts. :)
+### Scripting From Template to Cloud Usage
+- Your task logic shall be added to the run() function. Placeholder/Example Code can be removed here :) Please try to modify code in this section only. Extensions of the library are welcome, if they are reused multiple times in other scripts.
 - Push your changes to the repo when your script is running without bugs.
 - Go again to ```</>``` Button and import your script
 - Double click on the script and set the correct debug mode depending if your script is triggerd manually (e.g. buttons or similar) or triggered by automatization
