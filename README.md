@@ -69,9 +69,9 @@
 - Go again to ```</>``` Button and import your script
 - Double click on the script and set the correct debug mode for manual trigger (e.g. buttons or similar) or automatization scripts
 - Now you can link it to the intended trigger
-    - For Automated Scripts, use the 'Automation Rules' in the menu next to the little bell in the upper right corner. Usage is very straightforward.
+    - For Automated Scripts, use the 'Automation Rules' in the menu ```...``` next to the little bell in the upper right corner. Usage is very straightforward.
     - For Manual Trigger, I recommend to add a Button column and link the button the script. Configuration is also straightforward.
 - Test your script in the cloud by operating the needed triggers (update colum, adding new lines by running sendnewrow4debug.py, ect). I recommend to add many print() to your code for debugging because there are no breaking points
-- For Loggings, open the script menu (...) in the ```</>``` view and open Script logs. Then select 'details' of the latest script executions
+- For Loggings, open the script menu ```...``` in the ```</>``` view and open Script logs. Then select 'details' of the latest script executions
 
 That's it. Feel free to extend this readme and/or the library. :) Cheers!
