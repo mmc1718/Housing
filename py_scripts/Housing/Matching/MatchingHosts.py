@@ -2,6 +2,7 @@
 from pickle import NONE
 from seatable_api import Base, context
 from seatable_api.date_utils import dateutils
+from seatable_api.constants import UPDATE_DTABLE
 
 class TableDef:
     HOST = "Hosts"
@@ -159,17 +160,17 @@ hosts = HostDatabase(base)
 refugees = RefugeeDatabase(base)
 
  ############### Add your Script below - Above is just the library ##################################
-row =context.current_row
-
-q = 'SELECT _id FROM ' + hosts._tableName + ' WHERE NPeople >= ' + row['NPeople'] + ' AND Duration = \''  + row['Duration'] + '\''       
+#row =context.current_row
+row = refugees.getRowByGenId('H-000001')
+q = 'SELECT _id FROM ' + hosts._tableName + ' WHERE NPeople >= ' + row['NPeople'] + ' AND Duration = \''  + row['Duration'] + '\'' + 'limit 15'     
 links = base.query(q)
 l =[]
 #cols = base.list_columns(refugees._tableName)
 for i in links:
    l.append(i['_id']) 
 
+currentList = row['Potential Hosts']
 #base.add_link('Xk1m',  refugees._tableName ,  hosts._tableName , row['_id'], l['_id'])
-base.update_link('Xk1m',  refugees._tableName ,  hosts._tableName , row['_id'], l)
+base.update_link('Xk1m',  refugees._tableID ,  hosts._tableID , row['_id'], l)
 
 print(row)
-

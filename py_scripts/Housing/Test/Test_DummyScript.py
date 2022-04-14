@@ -24,7 +24,7 @@ if __name__ == "__main__":
     
     print("******** Hosts Test **************")
 
-    hosts.appendRow(hosts.getDefEntry())
+    hosts.appendRow(hosts.getDummyRow())
     print("All Rows: \n")
     print(hosts.getAllRows())
     print ("\n")
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     print("Get Row By Gen Id " + genId +": " + rowId)
     genId = hosts.getGenIdOfRowId(rowId)
     print("Get Gen Id by Row Id " + rowId +": " + genId)
-    hosts.updateTimeStamp("Date",rowId)
+    hosts.setDateToNow("Date",rowId)
     print("Diff after update is " + genId + " is: " + str(hosts.getTimeDiff("Date", rowId)))
     rows_data = (hosts.getAllRowsOfView("Simple View"))
     hosts.batchUpdate(rows_data)
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     
     print("******** Refugee Test **************")
     
-    refugees.appendRow(refugees.getDefEntry())
+    refugees.appendRow(refugees.getDummyRow())
     print("All Rows: \n")
     print(refugees.getAllRows())
     print ("\n")
@@ -57,7 +57,7 @@ if __name__ == "__main__":
     print("Get Row By Gen Id " + genId +": " + rowId)
     genId = refugees.getGenIdOfRowId(rowId)
     print("Get Gen Id by Row Id " + rowId +": " + genId)
-    refugees.updateTimeStamp("Date",rowId)
+    refugees.setDateToNow("Date",rowId)
     print("Diff after update is " + genId + " is: " + str(refugees.getTimeDiff("Date", rowId)))
     rows_data = (refugees.getAllRowsOfView(ViewDef.SIMPLEMATCHING))
     refugees.batchUpdate(rows_data)
