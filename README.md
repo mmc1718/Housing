@@ -56,7 +56,7 @@
 #### Dealing with the API Token
 - Go to the Seatable cloud and log in
 - Navigate to your base
-- Click on the </> Button next to the plugins button
+- Click on the ```</>``` Button next to the plugins button
 - Import utils/getAPIToken.py and utils/sendnewrow4debug.py
 - Run getApiToken() and copy the token to your clipboard
 - Go back to your IDE
@@ -65,12 +65,12 @@
 ### Scripting in Template
 - Your task logic shall be added to the run() function. Placeholder/Example Code can be removed here :) Please try to only modify code in this section. Extensions of the library are welcome, if they are reused multiple times in other scripts. :)
 - Push your changes to the repo when your script is running without bugs.
-- Go again to </> Button and import your script
+- Go again to ```</>``` Button and import your script
 - Double click on the script and set the correct debug mode depending if your script is triggerd manually (e.g. buttons or similar) or triggered by automatization
 - Now you can link it to the intended trigger
     - For Automated Scripts, use the 'Automation Rules' in the menu next to the little bell in the upper right corner. Usage is very straightforward.
     - For Manual Trigger, I recommend to add a Button column and link the button the script. Configuration is also straightforward.
 - Test your script in the cloud by operating the needed triggers (update colum, adding new lines by running sendnewrow4debug.py, ect). I recommend to add many print() to your code for debugging because there are no breaking points
-- For Loggings, open the script menu (...) in the </> view and open Script logs. Then select 'details' of the latest script executions
+- For Loggings, open the script menu (...) in the ```</>``` view and open Script logs. Then select 'details' of the latest script executions
 
 That's it. Feel free to extend this readme and/or the library. :) Cheers!
